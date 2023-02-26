@@ -1,0 +1,63 @@
+.background(@from, @to) {
+  background: (@from + @to)/2;
+  background: -webkit-gradient(linear, left top, left bottom, from(@from), to(@to));
+  background: -moz-linear-gradient(top, @from, @from);
+  // IE9使用filter背景渐变, 但因为使用了borader-radius, 所以不兼容, IE9使用中和的背景色即可
+  //filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='@{from}', endColorstr='@{to}');
+}
+
+.guide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .7);
+  border-radius: 20px;
+
+  .wrap {
+    position: relative;
+    overflow: hidden;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #18191a;
+    // height: 60%;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 15px;
+
+    .nomal,
+    .wallet {
+      height: 100px;
+      width: 90%;
+      margin: 30px auto;
+      letter-spacing: 2px;
+      background-color: #343434;
+      overflow: hidden;
+      border-radius: 20px;
+
+    }
+
+    .wallet {
+      background: url(../../resource/image/metamask1.png) no-repeat center center;
+      // background-size: 90% 100px;
+    }
+
+    .nomal {
+      height: 80px;
+      line-height: 80px;
+      font-size: 20px;
+      color: #fff;
+    }
+
+  }
+
+
+}
+
+.hide {
+  display: none;
+}

@@ -1,0 +1,65 @@
+.decorate h1 {
+  position: absolute;
+  width: 100%;
+  text-align: right;
+  font-weight: normal;
+  top: -14px;
+  left: 0;
+  margin: 0;
+  padding-right: 60px;
+  font-size: 30px;
+}
+.decorate .topBorder {
+  height: 10px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.decorate .topBorder .logo {
+  position: absolute;
+  background: url(../../resource/image/logo.png) no-repeat;
+  width: 136px;
+  height: 38px;
+  top: -18px;
+  margin-left: 60px;
+  background-size: 136px 38px;
+}
+.decorate .topBorder .address {
+  position: absolute;
+  top: -10px;
+}
+.decorate .topBorder span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  overflow: hidden;
+  background: #000;
+}
+.decorate .topBorder span.mr {
+  margin-right: 10px;
+}
+.decorate .topBorder span.ml {
+  margin-left: 10px;
+}
+.decorate .view {
+  position: absolute;
+  right: -70px;
+  top: 20px;
+  width: 44px;
+}
+.decorate .view em {
+  display: block;
+  width: 22px;
+  height: 22px;
+  overflow: hidden;
+  float: left;
+}
+.decorate .view p {
+  height: 22px;
+  clear: both;
+}
+.decorate .view.l {
+  right: auto;
+  left: -70px;
+}
