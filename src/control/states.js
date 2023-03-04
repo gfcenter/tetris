@@ -1,9 +1,23 @@
-import { List } from 'immutable';
+import {
+  List,
+} from 'immutable';
 import store from '../store';
-import { want, isClear, isOver } from '../unit/';
+import {
+  want,
+  isClear,
+  isOver,
+} from '../unit/';
 import actions from '../actions';
-import { speeds, blankLine, blankMatrix, clearPoints, eachLines } from '../unit/const';
-import { music } from '../unit/music';
+import {
+  speeds,
+  blankLine,
+  blankMatrix,
+  clearPoints,
+  eachLines,
+} from '../unit/const';
+import {
+  music,
+} from '../unit/music';
 import handler from '../contract/handler';
 
 const getStartMatrix = (startLines) => { // 生成startLines
@@ -44,6 +58,10 @@ const states = {
   // 本次游戏回合id，用于上链记录成绩
   id: null,
 
+  // 上链操作控制标识，每消除10次上链一次
+  cleanCount: 0,
+  clearNum: 0,
+
   // 随机数方法
   randomString: (len) => {
     const newlen = len || 32;
@@ -71,7 +89,9 @@ const states = {
     const startLines = state.get('startLines');
     const startMatrix = getStartMatrix(startLines);
     store.dispatch(actions.matrix(startMatrix));
-    store.dispatch(actions.moveBlock({ type: state.get('next') }));
+    store.dispatch(actions.moveBlock({
+      type: state.get('next'),
+    }));
     store.dispatch(actions.nextBlock());
     states.auto();
   },
@@ -138,7 +158,9 @@ const states = {
     }
     setTimeout(() => {
       store.dispatch(actions.lock(false));
-      store.dispatch(actions.moveBlock({ type: store.getState().get('next') }));
+      store.dispatch(actions.moveBlock({
+        type: store.getState().get('next'),
+      }));
       store.dispatch(actions.nextBlock());
       states.auto();
     }, 100);
@@ -176,7 +198,9 @@ const states = {
       newMatrix = newMatrix.unshift(List(blankLine));
     });
     store.dispatch(actions.matrix(newMatrix));
-    store.dispatch(actions.moveBlock({ type: state.get('next') }));
+    store.dispatch(actions.moveBlock({
+      type: state.get('next'),
+    }));
     store.dispatch(actions.nextBlock());
     states.auto();
     store.dispatch(actions.lock(false));
@@ -198,15 +222,24 @@ const states = {
       window.console.log('New id:', states.id);
       states.id = states.randomString(20);
     }
-    // 上链操作
-    window.console.log('id p s l:', states.id, addPoints, lines.length, state.get('speedRun'));
-    if (sessionStorage.getItem('account')) {
-      handler.ScoreContract.methods.addScore(
-        states.id, addPoints, lines.length, state.get('speedRun'),
-        parseInt(new Date().getTime() / 1000, 10))
-        .send({ from: sessionStorage.getItem('account') }, (err, createHash) => {
-          window.console.log('Hash', createHash);
-        });
+
+    states.cleanCount++;
+    states.clearNum += lines.length;
+    if (states.cleanCount === 5) {
+      // 上链操作
+      window.console.log('id p s l:', states.id, addPoints, lines.length, state.get('speedRun'));
+      if (sessionStorage.getItem('account')) {
+        handler.ScoreContract.methods.addScore(
+            states.id, addPoints, states.clearNum, state.get('speedRun'),
+            parseInt(new Date().getTime() / 1000, 10))
+          .send({
+            from: sessionStorage.getItem('account'),
+          }, (err, createHash) => {
+            window.console.log('Hash', createHash);
+          });
+      }
+      states.cleanCount = 0;
+      states.clearNum = 0;
     }
 
     const speedAdd = Math.floor(clearLines / eachLines); // 消除行数, 增加对应速度
@@ -226,7 +259,9 @@ const states = {
   // 游戏结束动画完成
   overEnd: () => {
     store.dispatch(actions.matrix(blankMatrix));
-    store.dispatch(actions.moveBlock({ reset: true }));
+    store.dispatch(actions.moveBlock({
+      reset: true,
+    }));
     store.dispatch(actions.reset(false));
     store.dispatch(actions.lock(false));
     store.dispatch(actions.clearLines(0));
